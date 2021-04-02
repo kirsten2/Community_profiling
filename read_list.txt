@@ -1,0 +1,2 @@
+Ig13611,Ig13611_sub_R1.fastq.tar.gz,Ig13611_sub_R2.fastq.tar.gz
+Ig13619,Ig13619_sub_R1.fastq.tar.gz,Ig13619_sub_R2.fastq.tar.gz
