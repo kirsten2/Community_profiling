@@ -85,7 +85,7 @@ core_cov.R 4_firm5_single_ortho_filt_corecov.txt
 Running the pipeline with other data
 --------
 
-**Data preparation, mapping and filtering**
+**Data preparation: mapping and filtering**
 
 Before mapping any reads, make sure to check the quality of the raw data (fx. with [fastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)). If needed, trim the reads and remove adapters (fx. with [Trimmomatic](https://github.com/usadellab/Trimmomatic)).
 
@@ -93,4 +93,19 @@ Reads can be mapped according to Software preference (just ensure that the resul
 
 ```bash
 samtools view -h file.bam | filter_bam.py 
+```
+**Running the pipeline: all community members**
+
+In the provided example data-set, the fastq-files were subset to only include reads mapping to the *Lactobacillus* "Firm5" phylotype, in order to keep the file-sizes modest. To profile the complete community, the main pipeline scripts (```core_cov.py```, ```core_cov.R```) must be repeated on each ortholog-file in the "Orthofinder" directory. Save some typing by executing the scripts with bash, like so:
+
+```bash
+ln -s Orthofinder/*single_ortho_filt.txt .
+
+for i in $(ls *single_ortho_filt.txt); do
+    core_cov.py $i
+done
+
+for i in $(ls *corecov.txt); do
+    core_cov.R $i
+done
 ```
