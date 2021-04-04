@@ -16,7 +16,17 @@ If you are using the pipeline, please cite:
 About community profiling on the honey bee gut microbiota: what and why
 ----------
 
-The honey bee gut microbiota is an emerging insect model for studying the evolution and function of the gut microbiota (see fx. [10.1038/nrmicro.2016.43](https://pubmed.ncbi.nlm.nih.gov/27140688/)).
+The honey bee gut microbiota is an emerging insect model for studying the evolution and function of the gut microbiota (see fx. [10.1038/nrmicro.2016.43](https://pubmed.ncbi.nlm.nih.gov/27140688/)). Indeed, a large number of studies have been published, investigating the composition of the honey bee gut microbiota, both under natural conditions and in the lab. However, it has by now been firmly established that the microbiota is composed of highly diverse bacterial strains, which cannot be distinguished or functionally characterised with 16S rRNA data alone. Indeed, most  of the16S rRNA phylotypes (> 97% 16S rRNA) colonising the honey bee gut are composed of multiple highly divergent species (see fx. doi:[10.1038/s41467-019-08303-0](https://www.nature.com/articles/s41467-019-08303-0)). Using metagenomic data, in combination with a genomic database, these species can be accurately quantified, thereby giving a more detailed overview of the community composition.
+
+A comprehensive genomic database has been developed for the honey bee gut microbiota, using genome sequences of bacterial isolates. Previous studies on honey bees (Apis mellifera, Apis cerana) have shown that this database recruits about 90% of all metagenomic reads  in most metagenomic samples (excluding host-derived reads). The database also contains genomes derived from other bee species, such as bumble bees, but it has not been tested with metagenomic data for these bee species yet. 
+
+The current pipeline employs mapped read coverage on core genes in order to quantify community members, similarly to several other published metagenomic pipelines. However, there are a few added quirks that make the pipeline unique :
+
+- Species boundaries have been determined with phylogenomic analysis and validated with metagenomic data. This is of importance, since some of the community members display evidence of ongoing speciation
+- Most species in the database are represented by multiple genomes (max 98.5% gANI between genomes). This helps to ensure that reads a recruited with similar efficiency in metagenomic samples harboring distinct strains.
+- The pipeline employs core genes inferred at the phylotype-level. By using a large number of core genes (> 700), more accurate abundance estimates can be obtained.
+- The pipeline will estimate coverage at the terminus in case of ongoing replication, and thereby also estimate the replication activity ("PTR": peak-to-through ratio)
+
 
 #Download the honey bee gut microbiota genomic database and some example metagenomic reads
 
