@@ -18,25 +18,51 @@ About community profiling on the honey bee gut microbiota: what and why
 
 The honey bee is an emerging insect model for studying the evolution and function of the gut microbiota (see fx. [10.1038/nrmicro.2016.43](https://pubmed.ncbi.nlm.nih.gov/27140688/)). Indeed, a large number of studies have been published, investigating the composition of the honey bee gut microbiota, both under natural conditions and in the lab. However, it has by now been firmly established that the microbiota is composed of highly diverse bacterial strains, which cannot be distinguished or functionally characterised with 16S rRNA data alone. Indeed, most  of the16S rRNA phylotypes (> 97% 16S rRNA) colonising the honey bee gut are composed of multiple highly divergent species (see fx. doi:[10.1038/s41467-019-08303-0](https://www.nature.com/articles/s41467-019-08303-0)). Using metagenomic data, these species can be accurately quantified, thereby providing a more detailed profile of the community composition.
 
-The pipeline employs a comprehensive genomic database, tailored specifically towards the honey bee gut microbiota [zenodo_link](https://zenodo.org/record/4661061#.YGmkRy0RoRA). Previous studies on honey bees (*Apis mellifera*, *Apis cerana*) have shown that this database recruits about 90% of all metagenomic reads  in most metagenomic samples (excluding host-derived reads). The database also contains genomes derived from other bee species, such as bumble bees, but it has not been tested with metagenomic data for these bee species yet. 
+The pipeline employs a comprehensive genomic database, tailored specifically towards the honey bee gut microbiota ([zenodo](https://zenodo.org/record/4661061#.YGmkRy0RoRA)). Previous studies on honey bees (*Apis mellifera*, *Apis cerana*) have shown that this database recruits about 90% of all metagenomic reads  in most metagenomic samples (excluding host-derived reads). The database also contains genomes derived from other bee species, such as bumble bees, but it has not been tested with metagenomic data for these bee species yet. 
 
 Similarly to several other published metagenomic pipelines, species abundance is estimated based on mapped read coverage to core genes. However, there are a few added quirks that make this pipeline unique :
 
-- Species boundaries have been determined with phylogenomic analysis and validated with metagenomic data. This is of importance, since some of the community members display evidence of ongoing speciation
+- Species boundaries have been determined with phylogenomic analysis and validated with metagenomic data. This is of importance, since some of the community members display evidence of ongoing speciation.
 - Most species in the database are represented by multiple genomes (max 98.5% gANI between genomes). This helps to ensure that reads a recruited with similar efficiency in metagenomic samples harboring distinct strains.
-- The pipeline employs core genes inferred at the phylotype-level. By using a large number of core genes (> 700), more accurate abundance estimates can be obtained.
+- The pipeline employs core genes inferred at the phylotype-level. By using a large number of core genes (+700), more accurate abundance estimates can be obtained.
 - The pipeline will estimate coverage at the terminus in case of ongoing replication, and thereby also estimate the replication activity ("PTR": peak-to-through ratio)
 
+Pre-requisites
+--------
 
-#Download the honey bee gut microbiota genomic database and some example metagenomic reads
+This pipeline requires:
 
-python3 bin/download_data.py --genome_db
-python3 bin/downépad_data.py --metagenomic_reads
+* Python 3 (version 3.6 or higher)
+* Bash
+* R (including packages: "segmented", "plyr")
+* [samtools](http://www.htslib.org) 
+* [bwa](https://github.com/lh3/bwa) (if using the repository scripts for mapping)
 
-#Map reads to genomic database and filter alignments (setting minimum read alignment length to 50bp)
+Installation
+--------
 
-#NOTE: add check for python-script? 
-bash bin/mapping.sh -d genome_db_210402 -l read_list.txt -t 6 -m 50
+```bash
+git clone https://github.com/kirsten2/Community_profiling.git
+cd Community_profiling
+export PATH=`pwd`/bin:$PATH
+```
+Note: in the following examples, it is assumed that the bin directory,```samtools``` and ```bwa mem``` are in the system path.
+
+Quick-start: Running the pipeline with example data
+--------
+
+Download the genomic database and an example data-set of two metagenomic samples:
+
+```bash
+download_data.py --genome_db --metagenomic_reads
+```
+**Expected result**: four directories with genomic data for all genomes in the honey bee gut microbiota database (```faa_files```,```ffn_files```, ```bed_files```, ```gff_files```), the database file (```genome_db_210402```), the database metafile (```genome_db_metafile_210402.txt```), the Orthofinder directory (containing files of single-copy core gene families) and four files with metagenomic reads (*fastq.gz).
+
+Map the reads to genomic database (using 6 threads), and filter the alignments (minimum read alignment length 50bp):
+
+```bash
+mapping.sh -d genome_db_210402 -l read_list.txt -t 6 -m 50
+```
 
 #Calculate mapped read coverage on filtered single-copy core gene families 
 
