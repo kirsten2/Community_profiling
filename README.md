@@ -102,7 +102,7 @@ In the provided example data-set, the fastq-files were subset to only include re
 ln -s Orthofinder/*single_ortho_filt.txt .
 
 for i in $(ls *single_ortho_filt.txt); do
-    core_cov.py $i
+    core_cov.py -d genome_db_metafile_210402.txt -l bamfile_list.txt  -g $i -b bed_files;
 done
 
 for i in $(ls *corecov.txt); do
