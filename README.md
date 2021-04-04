@@ -56,21 +56,30 @@ Download the genomic database and an example data-set of two metagenomic samples
 ```bash
 download_data.py --genome_db --metagenomic_reads
 ```
-**Expected result**: four directories with genomic data for all genomes in the honey bee gut microbiota database (```faa_files```,```ffn_files```, ```bed_files```, ```gff_files```), the database file (```genome_db_210402```), the database metafile (```genome_db_metafile_210402.txt```), the Orthofinder directory (containing files of single-copy core gene families) and four files with metagenomic reads (*fastq.gz).
+**Expected result**: four directories with genomic data for all genomes in the database (```faa_files```,```ffn_files```, ```bed_files```, ```gff_files```), the database file (```genome_db_210402```), the database metafile (```genome_db_metafile_210402.txt```), the Orthofinder directory (containing files of filtered single-copy core gene families) and four files with metagenomic reads (*fastq.tar.gz).
 
 Map the reads to genomic database (using 6 threads), and filter the alignments (minimum read alignment length 50bp):
 
 ```bash
 mapping.sh -d genome_db_210402 -l read_list.txt -t 6 -m 50
 ```
+\*Note: This can take a while on a regular laptop, be patient..
 
-#Calculate mapped read coverage on filtered single-copy core gene families 
+**Expected result**: Two sorted and indexed bam-files, filtered to contain mapped reads (in this case, reads mapped with an alignment length of 50bp or more).
 
+Calculate mapped read coverage on core gene families for the phylotype *Lactobacillus* "Firm5"\*:
+
+```bash
 for i in $(ls *bam); do echo $i >> bamfile_list.txt; done
-python3 bin/core_cov.py -d genome_db_metafile_210402.txt -l bamfile_list.txt  -g Orthofinder/4_firm5_single_ortho_filt.txt -b bed_files
+core_cov.py -d genome_db_metafile_210402.txt -l bamfile_list.txt  -g Orthofinder/4_firm5_single_ortho_filt.txt -b bed_files
+```
+**Expected result**: A text-file (```4_firm5_single_ortho_filt_corecov.txt```) in "long-format", with the summed-up mean coverage of each core gene family, for each metagenomic sample.
+
+Estimate species coverage for the 6 species contained within the phylotype *Lactobacillus* "Firm5"\*, for the two metagenomic samples:
+
+```bash
+Rscript core_cov.R 4_firm5_single_ortho_filt_corecov.txt
+```
+**Expected result**: A smaller text-file (```4_firm5_single_ortho_filt_corecov_coord.txt```), with the estimated abundance of each species in each sample, and the "PTR" ratio (if determined). Furthermore, a pdf-file (```4_firm5_single_ortho_filt_corecov.pdf```) with plots depicting the coverage on the core gene families, and the fitted regression line used for the quantification.
 
 
-#Estimate terminus coverage (or median coverage)
-
-Rscript bin/core_cov.R 4_firm5_single_ortho_filt_corecov.txt --no_plots
-Rscript bin/core_cov.R 4_firm5_single_ortho_filt_corecov.txt 
