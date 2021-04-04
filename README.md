@@ -67,7 +67,7 @@ mapping.sh -d genome_db_210402 -l read_list.txt -t 6 -m 50
 
 **Expected result**: Two sorted and indexed bam-files, filtered to contain mapped reads (in this case, reads mapped with an alignment length of 50bp or more).
 
-Calculate mapped read coverage on core gene families for the phylotype *Lactobacillus* "Firm5"\*:
+Calculate mapped read coverage on core gene families for the phylotype *Lactobacillus* "Firm5"\:
 
 ```bash
 for i in $(ls *bam); do echo $i >> bamfile_list.txt; done
@@ -78,8 +78,19 @@ core_cov.py -d genome_db_metafile_210402.txt -l bamfile_list.txt  -g Orthofinder
 Estimate species coverage for the 6 species contained within the phylotype *Lactobacillus* "Firm5"\*, for the two metagenomic samples:
 
 ```bash
-Rscript core_cov.R 4_firm5_single_ortho_filt_corecov.txt
+core_cov.R 4_firm5_single_ortho_filt_corecov.txt
 ```
 **Expected result**: A smaller text-file (```4_firm5_single_ortho_filt_corecov_coord.txt```), with the estimated abundance of each species in each sample, and the "PTR" ratio (if determined). Furthermore, a pdf-file (```4_firm5_single_ortho_filt_corecov.pdf```) with plots depicting the coverage on the core gene families, and the fitted regression line used for the quantification.
 
+Running the pipeline with other data
+--------
 
+**Data preparation, mapping and filtering**
+
+Before mapping any reads, make sure to check the quality of the raw data (fx. with [fastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)). If needed, trim the reads and remove adapters (fx. with [Trimmomatic](https://github.com/usadellab/Trimmomatic)).
+
+Reads can be mapped according to Software preference (just ensure that the resulting bam-files are sorted and indexed). For most mapping software, it is prudent to add an additional layer of filtering on the bam-file. For example, ```bwa mem```, will map reads even if only a short fragment of the read is aligned. The bash-script included with this repository (```mapping.sh```) will remove the vast majority of such mappings when setting the alignment length threshold to 50bp or more. It is also possible to filter by "edit-distance" (score related to the number of mis-matches in the mapped alignment). The filtering can be done without using the bash-script, directly on a bam-file, by piping the data with samtools, like so:
+
+```bash
+samtools view -h file.bam | filter_bam.py 
+```

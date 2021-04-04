@@ -1,4 +1,4 @@
-#!/usr/bin Rscript
+#!/usr/bin/env Rscript
 options(warn=1)
 rm(list=ls())
 

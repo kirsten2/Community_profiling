@@ -112,7 +112,7 @@ while IFS= read -r line; do
         R2="${split_line[2]}"
         IFS="$IFS_DEF"
         outfile=""$sample_id"_filt.bam"
-        bwa mem -t "$NUM_THREADS" "$GENOME_DB" "$R1" "$R2" | samtools view -h -F4 --threads 20 - | python3 bin/filter_bam.py -m "$MATCH_LENGTH" -e "$EDIT_DIST"  | samtools sort - --threads 20 -o "$outfile"
+        bwa mem -t "$NUM_THREADS" "$GENOME_DB" "$R1" "$R2" | samtools view -h -F4 --threads 20 - | filter_bam.py -m "$MATCH_LENGTH" -e "$EDIT_DIST"  | samtools sort - --threads 20 -o "$outfile"
         samtools index "$outfile"
     fi
 done < "$READ_LIST"
