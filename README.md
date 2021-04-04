@@ -106,6 +106,6 @@ for i in $(ls *single_ortho_filt.txt); do
 done
 
 for i in $(ls *corecov.txt); do
-    core_cov.R $i
+    core_cov.R $i;
 done
 ```
