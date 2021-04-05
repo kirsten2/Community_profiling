@@ -73,7 +73,7 @@ Calculate mapped read coverage on core gene families for the phylotype *Lactobac
 for i in $(ls *bam); do echo $i >> bamfile_list.txt; done
 core_cov.py -d genome_db_metafile_210402.txt -l bamfile_list.txt  -g Orthofinder/4_firm5_single_ortho_filt.txt -b bed_files
 ```
-**Expected result**: A text-file (```4_firm5_single_ortho_filt_corecov.txt```) in "long-format", with the summed-up mean coverage of each core gene family, for each metagenomic sample.
+**Expected result**: A text-file (```4_firm5_single_ortho_filt_corecov.txt```) in "long-format", with the mean coverage of each core gene family, for each metagenomic sample.
 
 Estimate species coverage for the 6 species contained within the phylotype *Lactobacillus* "Firm5"\*, for the two metagenomic samples:
 
@@ -89,13 +89,13 @@ Running the pipeline with other data
 
 Before mapping any reads, make sure to check the quality of the raw data (fx. with [fastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)). If needed, trim the reads and remove adapters (fx. with [Trimmomatic](https://github.com/usadellab/Trimmomatic)).
 
-Reads can be mapped according to Software preference (just ensure that the resulting bam-files are sorted and indexed). For most mapping software, it is prudent to add an additional layer of filtering on the bam-file. For example, ```bwa mem```, will map reads even if only a short fragment of the read is aligned. The bash-script included with this repository (```mapping.sh```) will remove the vast majority of such mappings when setting the alignment length threshold to 50bp or more. It is also possible to filter by "edit-distance" (score related to the number of mis-matches in the mapped alignment). To see further details on script usage:
+Reads can be mapped according to Software preference, just make sure that the resulting bam-files are sorted and indexed. For most mapping software, it is prudent to add an additional layer of filtering on the bam-file. For example, ```bwa mem```, will map reads even if only a short fragment of the read is aligned. The bash-script included with this repository (```mapping.sh```) will remove the vast majority of such mappings when setting the alignment length threshold to 50bp or more. It is also possible to filter by "edit-distance" (score related to the number of mis-matches in the mapped alignment). To see further details on script usage:
 
 ```bash
 mapping.sh -h
 ```
 
-The filtering can be done without using the bash-script, directly on a bam-file, by piping the data with samtools, like so:
+The filtering can also be done without using the bash-script, directly on a bam-file, by piping the data with samtools, like so:
 
 ```bash
 samtools view -h file.bam | filter_bam.py 
