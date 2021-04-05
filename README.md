@@ -98,7 +98,7 @@ mapping.sh -h
 The filtering can also be done without using the bash-script, directly on a bam-file, by piping the data with samtools, like so:
 
 ```bash
-samtools view -h file.bam | filter_bam.py 
+samtools view -h file.bam | filter_bam.py -m 50 | samtools view -bh - > file_filt.bam
 ```
 **Running the pipeline: all community members**
 
@@ -118,6 +118,14 @@ done
 Analysis and result interpretation
 ----------
 
+The files generated with the script ```core_cov.R (*coord.txt)``` are formatted to be easily plotted in R (fx. with ```ggplot2```). To generate plots for the whole community, simply concatenate the files. 
+
+To evaluate the performance of the pipeline, take a look at the coverage plots. If the core gene family coverages are highly scattered, it is likely due to a sub-optimal match between the strains in the metagenomic sample and the reference genomes in the database. Despite the large number of genomes included in the database, there are still some community members with better representation than others. By default, the script will generate plots for each species, in each sample, so the pdf-file can become very large when analysing multiple samples. In that case, it is also possible to run the script without generating the plots (using the option "--no_plots").
+
+The ortholog-files included in the Orthofinder directory represent the core members of the honey bee gut microbiota, and has been previously shown to recruit around 90% of the non-host reads in most case. However, occasionally, it can happen that non-core members invade the community, and it is possible this happens more frequently if the bees are stressed or sick. Therefore, it is recommended to quantify the fraction of host-derived reads in the metagenomic samples too. The genomes of both *Apis mellifera* and *Apis cerana* are publicly available for download.
+
+"PTR" ratios are only reported when a reasonable fit is obtained with the "segmented" package, i.e. the estimated terminus is not too far from the genome mid-point, and the coverage at the assumed origin is higher than the terminus. Alternatively, the script will simply take the median coverage.
+For a few species, complete ordered genomes are yet to be generated. In that case, the median will be taken, even if it is clear that there is ongoing replication. As of yet, there are very few published studies on "PTR" in metagenomic data. Interestingly, for the honey bee, "PTR" was found to be significantly lower in winter-bees compared to nurses and foragers, suggesting that the gut microbiota is less active in winter-bees.
 
 
 
